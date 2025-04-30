@@ -1,5 +1,47 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## PostgreSQL Integration
+
+This application uses PostgreSQL for database operations. Follow these steps to set up:
+
+1. Make sure PostgreSQL is installed on your system
+2. Create a database named `websubiekt` (or use your preferred name)
+3. Configure your database connection in the `.env.local` file
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```
+PGHOST=localhost
+PGUSER=postgres
+PGPASSWORD=your_password
+PGDATABASE=websubiekt
+PGPORT=5432
+```
+
+Adjust these values according to your PostgreSQL setup.
+
+### Database Schema
+
+The application expects a table named `stan_magazynowy` in your PostgreSQL database. You can create it with:
+
+```sql
+CREATE TABLE stan_magazynowy (
+  id SERIAL PRIMARY KEY,
+  product_name VARCHAR(255) NOT NULL,
+  quantity INTEGER NOT NULL,
+  unit VARCHAR(50),
+  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Sample data
+INSERT INTO stan_magazynowy (product_name, quantity, unit) VALUES
+('Product A', 100, 'pcs'),
+('Product B', 50, 'kg'),
+('Product C', 75, 'pcs');
+```
+
 ## Getting Started
 
 First, run the development server:
