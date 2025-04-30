@@ -2,15 +2,28 @@
 
 import { useSearchParams } from 'next/navigation';
 import TableWithRefresh from './TableWithRefresh';
+import { Suspense } from 'react';
 
-// This component needs to be client-side since we're using state
-export default function SalesReportPage() {
+// Komponent, który używa useSearchParams
+function SalesReportContent() {
   const searchParams = useSearchParams();
   const dateFilter = searchParams.get('filter') || 'all';
 
+  return <TableWithRefresh dateFilter={dateFilter} />;
+}
+
+// Komponent zastępczy podczas ładowania
+function SalesReportFallback() {
+  return <div className="animate-pulse bg-gray-700 h-screen w-full rounded"></div>;
+}
+
+// Główny komponent strony
+export default function SalesReportPage() {
   return (
     <div className="p-8 pt-24 bg-gray-900 text-white min-h-screen">
-      <TableWithRefresh dateFilter={dateFilter} />
+      <Suspense fallback={<SalesReportFallback />}>
+        <SalesReportContent />
+      </Suspense>
     </div>
   );
 }
