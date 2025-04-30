@@ -105,7 +105,7 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
     if (!isClient) return;
     const intervalId = setInterval(() => {
       fetchData();
-    }, 60000);
+    }, 120000);
     return () => clearInterval(intervalId);
   }, [isClient, fetchData]);
 
