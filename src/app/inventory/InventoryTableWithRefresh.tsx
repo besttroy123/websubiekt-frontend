@@ -25,7 +25,7 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
   const [isClient, setIsClient] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   // Add state for sorting
-  const [sortKey, setSortKey] = useState<keyof InventoryItem | null>('id_stock'); // Default sort by ID
+  const [sortKey, setSortKey] = useState<keyof InventoryItem | null>('nazwa_produktu'); // Zmieniono domyślne sortowanie na nazwę produktu
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc'); // Default ascending
 
   // This effect runs only on the client after hydration is complete
@@ -176,9 +176,8 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
           <table className="min-w-full bg-gray-800">
             <thead className="sticky top-0 bg-gray-700 z-10">
               <tr>
-                {/* Use the helper function for all sortable headers */}
-                {renderSortableHeader('id_stock', 'ID')}
-                {renderSortableHeader('nazwa_produktu', 'NAZWA_PRODUKTU')}
+                {/* Usunięto kolumnę ID */}
+                {renderSortableHeader('nazwa_produktu', 'NAZWA PRODUKTU')}
                 {renderSortableHeader('opcje', 'OPCJE')}
                 {renderSortableHeader('grupa_towarowa', 'GRUPA TOWAROWA')}
                 {renderSortableHeader('cena_sprzedazy_brutto', 'CENA SPRZEDAŻY BRUTTO')}
@@ -192,7 +191,7 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
               {/* Map over sortedData */}
               {sortedData.map((item, index) => (
                 <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}>
-                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.id_stock !== null ? String(item.id_stock) : '-'}</td>
+                  {/* Usunięto komórkę z ID */}
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.nazwa_produktu !== null ? String(item.nazwa_produktu) : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.opcje !== null && item.opcje !== '' ? String(item.opcje) : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.grupa_towarowa !== null ? String(item.grupa_towarowa) : '-'}</td>
