@@ -61,7 +61,7 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
     // Set up interval to refresh data every 60 seconds
     const intervalId = setInterval(() => {
       fetchInventoryData();
-    }, 120000);
+    }, 180000);
 
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
