@@ -178,7 +178,7 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
               <tr>
                 {/* Usunięto kolumnę ID */}
                 {renderSortableHeader('nazwa_produktu', 'NAZWA PRODUKTU')}
-                {renderSortableHeader('opcje', 'OPCJE')}
+                {/* Usunięto kolumnę Opcje */}
                 {renderSortableHeader('grupa_towarowa', 'GRUPA TOWAROWA')}
                 {renderSortableHeader('cena_sprzedazy_brutto', 'CENA SPRZEDAŻY BRUTTO')}
                 {renderSortableHeader('cena_zakupu_netto', 'CENA ZAKUPU NETTO')}
@@ -193,7 +193,7 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
                 <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}>
                   {/* Usunięto komórkę z ID */}
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.nazwa_produktu !== null ? String(item.nazwa_produktu) : '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.opcje !== null && item.opcje !== '' ? String(item.opcje) : '-'}</td>
+                  {/* Usunięto komórkę z Opcje */}
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.grupa_towarowa !== null ? String(item.grupa_towarowa) : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.cena_sprzedazy_brutto !== null ? `${Number(item.cena_sprzedazy_brutto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.cena_zakupu_netto !== null ? `${Number(item.cena_zakupu_netto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
