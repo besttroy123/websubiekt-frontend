@@ -201,7 +201,7 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
   return (
     <div className="bg-gray-800 rounded-lg shadow p-6 min-h-[calc(100vh-12rem)] flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-gray-400 md:text-sm sm:text-xs">
           {loading ? (
             <span className="text-blue-400">Refreshing data...</span>
           ) : isClient && lastUpdated ? (
@@ -221,7 +221,7 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
       </div>
 
       {error && (
-        <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
+        <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 text-sm sm:text-xs">
           <p>Error fetching data: {error}</p>
         </div>
       )}
@@ -233,21 +233,19 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
         </div>
       ) : !salesData.length ? (
         // Apply fixed height and remove flex-grow from the "No data" container
-        <div className="flex justify-center items-center h-[calc(100vh-18rem)] border border-gray-700 rounded-lg"> {/* Added fixed height, border, rounded; removed flex-grow */}
-          <p className="text-gray-400 text-lg">No sales data available for the selected period.</p>
+        <div className="flex justify-center items-center h-[calc(100vh-18rem)] border border-gray-700 rounded-lg"> 
+          <p className="text-gray-400 text-lg md:text-base sm:text-sm">No sales data available for the selected period.</p>
         </div>
       ) : (
-        <> {/* Use a Fragment to wrap table and summary */}
-          {/* Table container already has fixed height */}
-          <div className="relative overflow-auto h-[calc(100vh-18rem)] border border-gray-700 rounded-lg flex-grow"> {/* Keep flex-grow here if needed, or remove if fixed height is sufficient */}
-            <table className="min-w-full bg-gray-800"> 
+        <> 
+          <div className="relative overflow-auto h-[calc(100vh-18rem)] border border-gray-700 rounded-lg flex-grow"> 
+            <table className="min-w-full bg-gray-800 text-sm md:text-xs sm:text-xs"> 
               <thead className="sticky top-0 bg-gray-700 z-10">
                 <tr>
-                  {/* Renderowanie nagłówków - automatycznie uwzględni 'rabat' dzięki pętli */}
                   {columns.map((column) => (
                     <th
-                      key={column} // Added key prop here
-                      className="px-6 py-3 border-b border-gray-700 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-600"
+                      key={column}
+                      className="px-6 py-3 md:px-4 md:py-2 sm:px-2 sm:py-1 border-b border-gray-700 text-left text-xs md:text-xs sm:text-[10px] font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-600"
                       onClick={() => handleSort(column as keyof SalesDataItem)}
                     >
                       <div className="flex items-center">
@@ -266,26 +264,23 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
               </tr>
             </thead>
             <tbody>
-              {/* Map over sortedData instead of salesData */}
-              {/* Update the key for rows since order_row_id is no longer available */}
               {sortedData.map((item, rowIndex) => (
                 <tr
                   key={rowIndex}
                   className={`${rowIndex % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}
                 >
-                  {/* Renderowanie komórek - aktualizacja formatowania dla 'rabat' */}
                   {columns.map((column, colIndex) => (
-                    <td key={colIndex} className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">
+                    <td key={colIndex} className="px-6 py-4 md:px-4 md:py-2 sm:px-2 sm:py-1 whitespace-nowrap border-b border-gray-700 text-gray-300 text-sm md:text-xs sm:text-[10px]">
                       {column === 'date_add' && item[column]
-                        ? new Date(item[column]).toLocaleDateString('en-CA') // Use en-CA locale for YYYY-MM-DD format
+                        ? new Date(item[column]).toLocaleDateString('en-CA')
                         : column === 'unit_price_tax_incl' && item[column] !== null
                         ? `${Number(item[column]).toFixed(2).replace('.', ',')} zł`
                         : column === 'total_price_brutto' && item[column] !== null
                         ? `${Number(item[column]).toFixed(2).replace('.', ',')} zł`
-                        : column === 'rabat' // Zmieniona logika formatowania dla rabatu
+                        : column === 'rabat'
                         ? (item[column] !== null && item[column] !== undefined && Number(item[column]) > 0
-                            ? `${Math.round(Number(item[column]))}%` // Wyświetl jako zaokrągloną liczbę całkowitą + %
-                            : '-') // Wyświetl '-' jeśli 0, null, undefined lub N/A
+                            ? `${Math.round(Number(item[column]))}%`
+                            : '-')
                         : item[column] !== null ? String(item[column]) : 'N/A'}
                     </td>
                   ))}
@@ -294,12 +289,9 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
             </tbody>
           </table>
         </div>
-        {/* Add the total sales summary section below the table container */}
-        {/* Remove border-t and border-gray-700 from this div */}
-        <div className="mt-4 pt-4 pr-4 text-right"> {/* Removed border-t border-gray-700 */}
-          <span className="text-gray-300 font-semibold">Całkowita wartość sprzedaży brutto: </span>
-          <span className="text-lg text-white font-bold">
-            {/* Format the total value as currency */}
+        <div className="mt-4 pt-4 pr-4 text-right"> 
+          <span className="text-gray-300 font-semibold md:text-sm sm:text-xs">Całkowita wartość sprzedaży brutto: </span>
+          <span className="text-lg md:text-base sm:text-sm text-white font-bold">
             {totalGrossSales.toFixed(2).replace('.', ',')} zł
           </span>
         </div>
