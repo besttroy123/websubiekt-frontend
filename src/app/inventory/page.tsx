@@ -23,9 +23,9 @@ export default async function InventoryPage() {
   }
 
   return (
-    <div className="p-8 bg-gray-900 text-white min-h-screen">
+    <div className="p-4 md:p-8 bg-gray-900 text-white min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">Stan magazynowy</h1>
-      <div className="bg-gray-800 rounded-lg shadow p-6 min-h-[calc(100vh - 100px)]">
+      <div className="bg-gray-800 rounded-lg shadow p-3 md:p-6 min-h-[calc(100vh - 100px)] overflow-x-auto w-full">
         {error !== null && (
           <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             <p>Error connecting to the database. Please try again later.</p>
@@ -33,7 +33,9 @@ export default async function InventoryPage() {
         )}
 
         <ClientOnly>
-          <InventoryTableWithRefresh initialData={inventoryData} />
+          <div className="w-full overflow-x-auto">
+            <InventoryTableWithRefresh initialData={inventoryData} />
+          </div>
         </ClientOnly>
       </div>
     </div>
