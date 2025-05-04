@@ -33,8 +33,6 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
   // Change default sort key to date_add and direction to desc
   const [sortKey, setSortKey] = useState<keyof SalesDataItem | null>('date_add');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
-  // Dodajemy stan do śledzenia szerokości ekranu
-  const [isMobile, setIsMobile] = useState(false);
 
   // Define columns in the specific order requested
   // Remove order_row_id and order_id from columns
@@ -101,25 +99,6 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
     setIsClient(true);
     fetchData();
   }, [fetchData]);
-
-  // Dodajemy efekt do wykrywania rozmiaru ekranu
-  useEffect(() => {
-    if (!isClient) return;
-    
-    // Funkcja sprawdzająca rozmiar ekranu
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px to typowy breakpoint dla urządzeń mobilnych
-    };
-    
-    // Sprawdź przy pierwszym renderowaniu
-    checkIfMobile();
-    
-    // Nasłuchuj na zmiany rozmiaru okna
-    window.addEventListener('resize', checkIfMobile);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, [isClient]);
 
   // Set up auto-refresh interval
   useEffect(() => {
@@ -219,61 +198,6 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
     </th>
   );
 
-  // Funkcja pomocnicza do formatowania wartości komórki
-  const formatCellValue = (column: string, value: any) => {
-    if (value === null || value === undefined) return 'N/A';
-    
-    switch(column) {
-      case 'date_add':
-        return new Date(value).toLocaleDateString('en-CA');
-      case 'unit_price_tax_incl':
-      case 'total_price_brutto':
-        return `${Number(value).toFixed(2).replace('.', ',')} zł`;
-      case 'rabat':
-        return value !== null && value !== undefined && Number(value) > 0
-          ? `${Math.round(Number(value))}%`
-          : '-';
-      default:
-        return String(value);
-    }
-  };
-
-  // Renderowanie mobilnej wersji tabeli jako karty
-  const renderMobileCards = () => (
-    <div className="space-y-4">
-      {sortedData.map((item, index) => (
-        <div 
-          key={index} 
-          className={`p-4 rounded-lg ${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} border border-gray-700`}
-        >
-          <div className="grid grid-cols-2 gap-2">
-            {columns.map((column, colIndex) => (
-              <div key={colIndex} className="mb-2">
-                <div className="text-xs text-gray-400 font-medium uppercase">
-                  {columnDisplayNames[column as keyof typeof columnDisplayNames] || column}
-                  {sortKey === column && (
-                    <ArrowUp
-                      size={12}
-                      className={`ml-1 inline text-blue-400 transition-transform duration-200 ${
-                        sortDirection === 'desc' ? 'rotate-180' : ''
-                      }`}
-                    />
-                  )}
-                </div>
-                <div 
-                  className="text-gray-300 font-medium"
-                  onClick={() => handleSort(column as keyof SalesDataItem)}
-                >
-                  {formatCellValue(column, item[column])}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <div className="bg-gray-800 rounded-lg shadow p-6 min-h-[calc(100vh-12rem)] flex flex-col">
       <div className="flex justify-between items-center mb-4">
@@ -303,69 +227,84 @@ export default function TableWithRefresh({ dateFilter }: TableWithRefreshProps) 
       )}
 
       {loading && !salesData.length ? (
+        // Keep loading spinner centered with flex-grow for now, or apply fixed height too if desired
         <div className="flex justify-center items-center flex-grow"> 
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : !salesData.length ? (
-        <div className="flex justify-center items-center h-[calc(100vh-18rem)] border border-gray-700 rounded-lg">
+        // Apply fixed height and remove flex-grow from the "No data" container
+        <div className="flex justify-center items-center h-[calc(100vh-18rem)] border border-gray-700 rounded-lg"> {/* Added fixed height, border, rounded; removed flex-grow */}
           <p className="text-gray-400 text-lg">No sales data available for the selected period.</p>
         </div>
       ) : (
-        <> 
-          {/* Wybieramy odpowiedni widok w zależności od rozmiaru ekranu */}
-          <div className={`relative ${isMobile ? '' : 'overflow-auto h-[calc(100vh-18rem)]'} border border-gray-700 rounded-lg flex-grow`}>
-            {isMobile ? (
-              renderMobileCards()
-            ) : (
-              <table className="min-w-full bg-gray-800"> 
-                <thead className="sticky top-0 bg-gray-700 z-10">
-                  <tr>
-                    {columns.map((column) => (
-                      <th
-                        key={column}
-                        className="px-6 py-3 border-b border-gray-700 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-600"
-                        onClick={() => handleSort(column as keyof SalesDataItem)}
-                      >
-                        <div className="flex items-center">
-                          {columnDisplayNames[column as keyof typeof columnDisplayNames] || column}
-                          {sortKey === column && (
-                            <ArrowUp
-                              size={14}
-                              className={`ml-1 text-blue-400 transition-transform duration-200 ${
-                                sortDirection === 'desc' ? 'rotate-180' : ''
-                              }`}
-                            />
-                          )}
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedData.map((item, rowIndex) => (
-                    <tr
-                      key={rowIndex}
-                      className={`${rowIndex % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}
+        <> {/* Use a Fragment to wrap table and summary */}
+          {/* Table container already has fixed height */}
+          <div className="relative overflow-auto h-[calc(100vh-18rem)] border border-gray-700 rounded-lg flex-grow"> {/* Keep flex-grow here if needed, or remove if fixed height is sufficient */}
+            <table className="min-w-full bg-gray-800"> 
+              <thead className="sticky top-0 bg-gray-700 z-10">
+                <tr>
+                  {/* Renderowanie nagłówków - automatycznie uwzględni 'rabat' dzięki pętli */}
+                  {columns.map((column) => (
+                    <th
+                      key={column} // Added key prop here
+                      className="px-6 py-3 border-b border-gray-700 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-600"
+                      onClick={() => handleSort(column as keyof SalesDataItem)}
                     >
-                      {columns.map((column, colIndex) => (
-                        <td key={colIndex} className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">
-                          {formatCellValue(column, item[column])}
-                        </td>
-                      ))}
-                    </tr>
+                      <div className="flex items-center">
+                        {columnDisplayNames[column as keyof typeof columnDisplayNames] || column}
+                        {sortKey === column && (
+                          <ArrowUp
+                            size={14}
+                            className={`ml-1 text-blue-400 transition-transform duration-200 ${
+                              sortDirection === 'desc' ? 'rotate-180' : ''
+                            }`}
+                          />
+                        )}
+                      </div>
+                    </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {/* Map over sortedData instead of salesData */}
+              {/* Update the key for rows since order_row_id is no longer available */}
+              {sortedData.map((item, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className={`${rowIndex % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}
+                >
+                  {/* Renderowanie komórek - aktualizacja formatowania dla 'rabat' */}
+                  {columns.map((column, colIndex) => (
+                    <td key={colIndex} className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">
+                      {column === 'date_add' && item[column]
+                        ? new Date(item[column]).toLocaleDateString('en-CA') // Use en-CA locale for YYYY-MM-DD format
+                        : column === 'unit_price_tax_incl' && item[column] !== null
+                        ? `${Number(item[column]).toFixed(2).replace('.', ',')} zł`
+                        : column === 'total_price_brutto' && item[column] !== null
+                        ? `${Number(item[column]).toFixed(2).replace('.', ',')} zł`
+                        : column === 'rabat' // Zmieniona logika formatowania dla rabatu
+                        ? (item[column] !== null && item[column] !== undefined && Number(item[column]) > 0
+                            ? `${Math.round(Number(item[column]))}%` // Wyświetl jako zaokrągloną liczbę całkowitą + %
+                            : '-') // Wyświetl '-' jeśli 0, null, undefined lub N/A
+                        : item[column] !== null ? String(item[column]) : 'N/A'}
+                    </td>
                   ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-          <div className="mt-4 pt-4 pr-4 text-right">
-            <span className="text-gray-300 font-semibold">Całkowita wartość sprzedaży brutto: </span>
-            <span className="text-lg text-white font-bold">
-              {totalGrossSales.toFixed(2).replace('.', ',')} zł
-            </span>
-          </div>
-        </>
-      )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Add the total sales summary section below the table container */}
+        {/* Remove border-t and border-gray-700 from this div */}
+        <div className="mt-4 pt-4 pr-4 text-right"> {/* Removed border-t border-gray-700 */}
+          <span className="text-gray-300 font-semibold">Całkowita wartość sprzedaży brutto: </span>
+          <span className="text-lg text-white font-bold">
+            {/* Format the total value as currency */}
+            {totalGrossSales.toFixed(2).replace('.', ',')} zł
+          </span>
+        </div>
+      </>
+    )}
     </div>
   );
 }
