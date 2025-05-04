@@ -172,8 +172,8 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
       {!error && inventoryData.length === 0 ? (
         <p className="text-gray-400">No inventory data available.</p>
       ) : (
-        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-200px)] border border-gray-700 rounded-lg">
-          <table className="min-w-full bg-gray-800 table-fixed md:table-auto">
+        <div className="overflow-auto max-h-[calc(100vh-200px)] border border-gray-700 rounded-lg">
+          <table className="min-w-full bg-gray-800">
             <thead className="sticky top-0 bg-gray-700 z-10">
               <tr>
                 {/* Usunięto kolumnę ID */}
@@ -192,14 +192,14 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
               {sortedData.map((item, index) => (
                 <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'} hover:bg-gray-700 transition-colors duration-150`}>
                   {/* Usunięto komórkę z ID */}
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.nazwa_produktu !== null ? String(item.nazwa_produktu) : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.nazwa_produktu !== null ? String(item.nazwa_produktu) : '-'}</td>
                   {/* Usunięto komórkę z Opcje */}
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.grupa_towarowa !== null ? String(item.grupa_towarowa) : '-'}</td>
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.cena_sprzedazy_brutto !== null ? `${Number(item.cena_sprzedazy_brutto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.cena_zakupu_netto !== null ? `${Number(item.cena_zakupu_netto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.cena_zakupu_brutto !== null ? `${Number(item.cena_zakupu_brutto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.stan_magazynowy !== null ? String(item.stan_magazynowy) : '-'}</td>
-                  <td className="px-2 py-3 md:px-6 md:py-4 whitespace-nowrap border-b border-gray-700 text-gray-300 text-xs md:text-base">{item.ean13 !== null && item.ean13 !== '' ? String(item.ean13) : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.grupa_towarowa !== null ? String(item.grupa_towarowa) : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.cena_sprzedazy_brutto !== null ? `${Number(item.cena_sprzedazy_brutto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.cena_zakupu_netto !== null ? `${Number(item.cena_zakupu_netto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.cena_zakupu_brutto !== null ? `${Number(item.cena_zakupu_brutto).toFixed(2).replace('.', ',')} zł` : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.stan_magazynowy !== null ? String(item.stan_magazynowy) : '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap border-b border-gray-700 text-gray-300">{item.ean13 !== null && item.ean13 !== '' ? String(item.ean13) : '-'}</td>
                 </tr>
               ))}
             </tbody>

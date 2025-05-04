@@ -24,17 +24,3 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-
-/* Dodane style dla responsywności tabel */
-@media (max-width: 768px) {
-  .table-fixed {
-    width: 100%;
-    table-layout: fixed;
-  }
-  
-  .table-fixed th, 
-  .table-fixed td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
