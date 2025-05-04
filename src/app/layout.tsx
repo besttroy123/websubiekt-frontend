@@ -14,8 +14,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Inventory Management System',
   description: 'A comprehensive system for managing inventory',
-  // Ustawienie stałej szerokości widoku jak na komputerze
-  viewport: 'width=1200, initial-scale=0.5',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    minimumScale: 1,
+  },
 }
 
 export default function RootLayout({
