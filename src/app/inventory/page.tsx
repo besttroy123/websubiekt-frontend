@@ -23,11 +23,11 @@ export default async function InventoryPage() {
   }
 
   return (
-    <div className="p-0 sm:p-2 md:p-8 bg-gray-900 text-white min-h-screen">
-      <h1 className="text-2xl font-semibold mb-4 px-2 sm:px-0">Stan magazynowy</h1>
-      <div className="bg-gray-800 rounded-none sm:rounded-lg shadow min-h-[calc(100vh-100px)] w-full overflow-x-auto">
+    <div className="p-4 md:p-8 bg-gray-900 text-white min-h-screen">
+      <h1 className="text-2xl font-semibold mb-6">Stan magazynowy</h1>
+      <div className="bg-gray-800 rounded-lg shadow p-3 md:p-6 min-h-[calc(100vh - 100px)] overflow-x-auto w-full">
         {error !== null && (
-          <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4 mx-2">
+          <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
             <p>Error connecting to the database. Please try again later.</p>
           </div>
         )}
