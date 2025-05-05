@@ -175,7 +175,8 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
       {!error && inventoryData.length === 0 ? (
         <p className="text-gray-400">No inventory data available.</p>
       ) : (
-        <div className="overflow-auto max-h-[calc(100vh-200px)] border border-gray-700 rounded-lg">
+        // Dodaj klasy overscroll-x-contain i overscroll-y-contain do tego diva
+        <div className="overflow-auto max-h-[calc(100vh-200px)] border border-gray-700 rounded-lg overscroll-x-contain overscroll-y-contain">
           <table className="min-w-full bg-gray-800">
             <thead className="sticky top-0 bg-gray-700 z-10">
               <tr>
