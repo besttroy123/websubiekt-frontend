@@ -32,6 +32,9 @@ export default function InventoryTableWithRefresh({ initialData }: { initialData
   useEffect(() => {
     setIsClient(true);
     setLastUpdated(new Date());
+    
+    // Pobierz świeże dane z API przy pierwszym załadowaniu po stronie klienta
+    fetchInventoryData();
   }, []);
 
 
